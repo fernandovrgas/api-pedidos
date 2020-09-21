@@ -11,6 +11,7 @@ API desenvolvida em ambiente de estudo. Tecnologias utilizadas:
 * **Nodemon**: apenas para ambiente de desenvolvimento. O Nodemon é muito útil porque carreta as alterações de forma automática. Deste modo não é necessario reiniciar o servidor sempre que precisar ver uma alteração feita na aplicação
 * **Sequelize**: ORM para abstração do banco mysql na API
 * **.editorconfig**: Referente a um pligin utilizado no VS Code para ajudar nos padroes de codificação.
+* **dotenv-safe**: Para gerenciar palavras secretas da aplicação
 
 ## 👨🏼‍💻 Autor
 
