@@ -1,15 +1,17 @@
-const Produto = require('../models/Produto');
+const Produto = require('../models/Produto'),
+	  config = require('../config/config')
+;
 
 module.exports = {
 	// lista
 	async index(req, res) {
-		const produtos = await Produto.findAll({ where: {status:'A'} });
+		const produtos = await Produto.findAll({ where: { status: config.enums.status.ativo } });
 		return res.json(produtos);
 	},
 
 	// exibir detalhe de um registro
 	async show(req, res) {
-		const produto = await Produto.findById(req.params.id);
+		const produto = await Produto.findByPk(req.params.id);
 		return res.json(produto);
 	},
 
@@ -21,13 +23,25 @@ module.exports = {
 
 	// atualizar registro
 	async update(req, res) {
-		const produto = await Produto.findByIdAndUpdate(req.params.id, req.body, { new: true, useFindAndModify: false });
+		let produto = await Produto.update(req.body, {
+			where: { id: req.params.id }
+		});
+
+		if (!produto) {
+			return res.status(400).json({ error: 'Produto não localizado' });
+		}
+
+		produto = await Produto.findByPk(req.params.id);
+
 		return res.json(produto);
 	},
 
 	// remover registro
 	async delete(req, res) {
-		await Produto.findByIdAndRemove(req.params.id, { useFindAndModify: false });
+		await Produto.destroy({
+			where: { id: req.params.id }
+		});
+
 		return res.send();
 	}
 }
