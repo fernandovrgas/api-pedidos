@@ -12,7 +12,8 @@ class Usuario extends Model {
 			email: DataTypes.STRING,
 			telefone: DataTypes.STRING,
 			senha: DataTypes.STRING,
-			endereco: DataTypes.STRING
+			endereco: DataTypes.STRING,
+			token: DataTypes.STRING
 		}, { sequelize });
 	}
 

@@ -23,7 +23,13 @@ module.exports = {
             	return res.status(400).json({ error: "Senha Inválida" });
             }
 
+			// recuperar token do usuario para atualizar o ultimo token valido no banco
 			const token = usuario.generateToken();
+			console.log('token', token);
+			console.log('usuario', usuario);
+			await Usuario.update({ token }, {
+				where: { id: usuario.id }
+			});
 
             return res.json({ token });
         } catch (err) {
