@@ -25,8 +25,6 @@ module.exports = {
 
 			// recuperar token do usuario para atualizar o ultimo token valido no banco
 			const token = usuario.generateToken();
-			console.log('token', token);
-			console.log('usuario', usuario);
 			await Usuario.update({ token }, {
 				where: { id: usuario.id }
 			});
