@@ -15,7 +15,12 @@ class Carrinho extends Model {
 
 	static associate(models) {
 		this.belongsTo(models.Usuario, { foreignKey: 'usuario_id', as: 'usuarios' });
-		this.belongsToMany(models.Produto, { foreignKey: 'produto_id', through: 'carrinho_produtos', as: 'carrinhos' });
+
+		let CarrinhoProduto = this.sequelize.define('carrinho_produtos', {
+			quantidade: DataTypes.INTEGER
+		});
+
+		this.belongsToMany(models.Produto, { foreignKey: 'carrinho_id', through: 'carrinho_produtos', as: 'carrinhos' });
 	}
 }
 

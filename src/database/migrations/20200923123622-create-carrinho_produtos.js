@@ -16,6 +16,13 @@ module.exports = {
 				onUpdate: 'CASCADE',
 				onDelete: 'CASCADE'
 			},
+			carrinho_id: {
+				type: Sequelize.INTEGER,
+				allowNull: false,
+				references: { model: 'carrinhos', key: 'id' },
+				onUpdate: 'CASCADE',
+				onDelete: 'CASCADE'
+			},
 			quantidade: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
