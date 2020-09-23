@@ -1,5 +1,6 @@
 const Carrinho = require('../models/Carrinho'),
-	  Usuario = require('../models/Usuario')
+	  Usuario = require('../models/Usuario'),
+	  Produto = require('../models/Produto')
 ;
 
 module.exports = {
@@ -15,23 +16,37 @@ module.exports = {
 			return res.status(400).json({ error: "Token inválido" });
 		}
 
+		if (!req.body.produto_id || !req.body.quantidade) {
+			return res.status(400).json({ error: "Informe os campos produto_id e quantidade no corpo da requisição!" });
+		}
+
+		// garantir que quantidade seja um inteiro
+		if (!Number.isInteger(req.body.quantidade)) {
+			return res.status(400).json({ error: "O campo quantidade precisar ser um número inteiro!" });
+		}
+
 		try {
-			let usuario = await Usuario.findAll({ where: { token }, plain: true });
+			const usuario = await Usuario.findAll({ where: { token }, plain: true });
 			if (!usuario) {
 				return res.status(400).json({ error: "Token inválido" });
 			}
 
-			const usuario_id = usuario.id;
-			// se usuário não tem carrinho criaremos uma única vez por usuário
-			let carrinho = await Carrinho.findAll({ where: { usuario_id }, plain: true });
-
-			if (!carrinho) {
-				carrinho = await Carrinho.create({ usuario_id });
+			const produto = await Produto.findByPk(req.body.produto_id);
+			if (!produto) {
+				return res.status(400).json({ error: 'Produto não encontrado' });
 			}
+
+			// se usuário não tem carrinho criaremos uma única vez por usuário
+			const [ carrinho ] = await Carrinho.findOrCreate({
+				where: { usuario_id: usuario.id }
+			});
+
+			// método auxiliar que inserir tech para user
+			await produto.addCarrinho(carrinho, { through: { quantidade: req.body.quantidade } });
 
 			return res.json(carrinho.id);
 		} catch (err) {
-            return res.status(400).json({ error: "Falha no registro do usuário " + err });
+            return res.status(400).json({ error: "Falha no registro do carrinho " + err });
         }
 	}
 }

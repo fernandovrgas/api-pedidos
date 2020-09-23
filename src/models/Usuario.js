@@ -17,6 +17,10 @@ class Usuario extends Model {
 		}, { sequelize });
 	}
 
+	static associate(models) {
+		this.hasMany(models.Carrinho, { foreignKey: 'usuario_id', as: 'carrinho' });
+	}
+
 	async compareHash(hash) {
         return await bcrypt.compare(hash.toString(), this.senha);
     }

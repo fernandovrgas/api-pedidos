@@ -10,4 +10,8 @@ Carrinho.init(connection);
 Produto.init(connection);
 Usuario.init(connection);
 
+Carrinho.associate(connection.models);
+Produto.associate(connection.models);
+Usuario.associate(connection.models);
+
 module.exports = connection;

@@ -11,6 +11,10 @@ class Produto extends Model {
 			status: DataTypes.STRING,
 		}, { sequelize });
 	}
+
+	static associate(models) {
+		this.belongsToMany(models.Carrinho, { foreignKey: 'produto_id', through: 'carrinho_produtos', as: 'carrinhos' });
+	}
 }
 
 module.exports = Produto;

@@ -14,7 +14,8 @@ class Carrinho extends Model {
 	}
 
 	static associate(models) {
-		this.belongsTo(models.Usuario, { foreignKey: 'usuario_id', as: 'usuario' });
+		this.belongsTo(models.Usuario, { foreignKey: 'usuario_id', as: 'usuarios' });
+		this.belongsToMany(models.Produto, { foreignKey: 'produto_id', through: 'carrinho_produtos', as: 'carrinhos' });
 	}
 }
 
