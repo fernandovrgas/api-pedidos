@@ -13,7 +13,8 @@ class Produto extends Model {
 	}
 
 	static associate(models) {
-		this.belongsToMany(models.Carrinho, { foreignKey: 'produto_id', through: 'carrinho_produtos', as: 'carrinhos' });
+		this.belongsToMany(models.Carrinho, { foreignKey: 'produto_id', through: 'carrinho_produtos', as: 'carrinho' });
+		this.belongsToMany(models.Pedido, { foreignKey: 'produto_id', through: 'pedido_produtos', as: 'pedido' });
 	}
 }
 

@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 
-class Carrinho extends Model {
+class Pedido extends Model {
 	static init(sequelize) {
 		super.init({
 			usuario_id: {
@@ -16,12 +16,12 @@ class Carrinho extends Model {
 	static associate(models) {
 		this.belongsTo(models.Usuario, { foreignKey: 'usuario_id', as: 'usuarios' });
 
-		let CarrinhoProduto = this.sequelize.define('carrinho_produtos', {
+		let PedidoProduto = this.sequelize.define('pedido_produtos', {
 			quantidade: DataTypes.INTEGER
 		});
 
-		this.belongsToMany(models.Produto, { foreignKey: 'carrinho_id', through: 'carrinho_produtos', as: 'produtos' });
+		this.belongsToMany(models.Produto, { foreignKey: 'pedido_id', through: 'pedido_produtos', as: 'pedidos' });
 	}
 }
 
-module.exports = Carrinho;
+module.exports = Pedido;

@@ -26,6 +26,7 @@ module.exports = {
 		}
 
 		try {
+			// TODO - Controle por token - Melhorar a forma como o token é gerido. Desta forma possivelmente não funcionará com dois logins simultaneos
 			const usuario = await Usuario.findAll({ where: { token }, plain: true });
 			if (!usuario) {
 				return res.status(400).json({ error: "Token inválido" });

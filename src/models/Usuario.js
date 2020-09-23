@@ -19,6 +19,7 @@ class Usuario extends Model {
 
 	static associate(models) {
 		this.hasMany(models.Carrinho, { foreignKey: 'usuario_id', as: 'carrinho' });
+		this.hasMany(models.Pedido, { foreignKey: 'usuario_id', as: 'pedido' });
 	}
 
 	async compareHash(hash) {

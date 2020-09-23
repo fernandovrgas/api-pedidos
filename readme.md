@@ -37,3 +37,8 @@ API desenvolvida em ambiente de estudo. Tecnologias utilizadas:
 6. Rode `yarn sequelize db:migrate` para executar as migrations;
 7. Rode `yarn dev` para iniciar o servidor.
 8. Importe o arquivo `Insomnia.json` desse repositório no Insomnia;
+
+## Evolução
+
+Este projeto foi desenvolvido como forma de desafio e poderá passar por evoluções futuras. Dentro do projeto foram organizados "TODOS" para que se possa identificar
+as melhorias identificadas durante a etapa de desenvolvimento

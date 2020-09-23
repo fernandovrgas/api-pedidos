@@ -1,8 +1,9 @@
 const express = require("express"),
 	  routes = express.Router(),
+	  CarrinhoController = require('./controllers/CarrinhoController'),
+	  PedidoController = require('./controllers/PedidoController'),
 	  ProdutoController = require('./controllers/ProdutoController'),
 	  UsuarioController = require('./controllers/UsuarioController'),
-	  CarrinhoController = require('./controllers/CarrinhoController'),
       authMiddleware = require("./middlewares/auth")
 ;
 
@@ -15,6 +16,7 @@ routes.put('/produtos/:id', authMiddleware, ProdutoController.update);
 routes.delete('/produtos/:id', authMiddleware, ProdutoController.delete);
 
 routes.post('/carrinho', authMiddleware, CarrinhoController.add);
+routes.post('/pedido', authMiddleware, PedidoController.checkout);
 
 // ======== Rotas pública ====================
 // Usuarios
