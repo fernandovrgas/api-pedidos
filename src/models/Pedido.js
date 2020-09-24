@@ -6,10 +6,14 @@ class Pedido extends Model {
 			usuario_id: {
                 type: DataTypes.INTEGER,
                 references: {
-                    model: sequelize.models.Usuario,
+                    model: sequelize.models.Pedido,
                     key: 'id'
                 }
-            }
+			},
+			forma_pagamento: DataTypes.INTEGER,
+			valor_total: DataTypes.DECIMAL(10,2),
+			endereco_entrega: DataTypes.STRING,
+			status: DataTypes.INTEGER
 		}, { sequelize });
 	}
 
@@ -17,10 +21,11 @@ class Pedido extends Model {
 		this.belongsTo(models.Usuario, { foreignKey: 'usuario_id', as: 'usuarios' });
 
 		let PedidoProduto = this.sequelize.define('pedido_produtos', {
-			quantidade: DataTypes.INTEGER
+			quantidade: DataTypes.INTEGER,
+			preco: DataTypes.DECIMAL(10,2)
 		});
 
-		this.belongsToMany(models.Produto, { foreignKey: 'pedido_id', through: 'pedido_produtos', as: 'pedidos' });
+		this.belongsToMany(models.Produto, { foreignKey: 'pedido_id', through: 'pedido_produtos', as: 'produtos' });
 	}
 }
 

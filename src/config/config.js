@@ -15,6 +15,10 @@ module.exports = {
 			'saiu_para_entrega': 3,
 			'entregue': 4,
 			'cancelado': 5
+		},
+		formaPagamento: {
+			'dinheiro': 1,
+			'cartao': 2
 		}
 	}
 }
