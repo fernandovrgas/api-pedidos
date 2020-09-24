@@ -15,11 +15,24 @@ module.exports = {
 	 */
 	async checkout(req, res) {
 		const token = req.headers.token,
-			  pedido = []
+			  dataPedido = {}
 		;
 
 		if (!token) {
 			return res.status(400).json({ error: "Token inválido" });
+		}
+
+		if (!req.body.endereco_entrega) {
+			return res.status(400).json({ error: "O campo endereco_entrega é obrigatório" });
+		}
+
+		if (!req.body.forma_pagamento) {
+			return res.status(400).json({ error: "O campo forma_pagamento é obrigatório" });
+		}
+
+		if (req.body.forma_pagamento != config.enums.formaPagamento.dinheiro &&
+			req.body.forma_pagamento != config.enums.formaPagamento.cartao) {
+				return res.status(400).json({ error: "A forma de pagamento informa é inválida" });
 		}
 
 		// validar os campos do pedido
@@ -29,8 +42,6 @@ module.exports = {
 			if (!usuario) {
 				return res.status(400).json({ error: "Token inválido" });
 			}
-
-
 
 			// TODO - Melhorar a forma como o retorno de dados vem. O ideial seria cada linha conter carrinho_produtos com quantidade
 			let carrinho = await Carrinho.findAll({
@@ -56,21 +67,31 @@ module.exports = {
 				return res.status(400).json({ error: "O valor mínimo para fechar o pedido é de R$ " + config.enums.valorMinimoPedido + "!" });
 			}
 
-			pedido.formaPagamento = req.body.formaPagamento;
-			pedido.endereco = usuario.endereco;
-			pedido.valorTotal = valorTotal;
-			pedido.status = config.enums.statusPedido.novo;
+			dataPedido.forma_pagamento = req.body.forma_pagamento;
+			dataPedido.endereco_entrega = req.body.endereco_entrega;
+			dataPedido.valor_total = valorTotal;
+			dataPedido.status = config.enums.statusPedido.novo;
+			dataPedido.usuario_id = usuario.id;
 
-			carrinho.forEach(produto => {
-				//inserir produto no pedido_produto e remover do carrinho produto
-				//console.log(produto.carrinho_produtos);
+			const pedido = await Pedido.create(dataPedido);
+
+			carrinho.map(async produto => {
+				try {
+					await pedido.addProdutos(pedido, {
+						through: {
+							produto_id: produto.carrinho_produtos.produto_id,
+							quantidade: produto.carrinho_produtos.quantidade,
+							preco: produto.preco
+						}
+					});
+				} catch(err) {
+					return res.status(400).json({ error: "Falha no registro do produto do pedido " + err });
+				}
 			});
 
-			return res.json(carrinho);
+			return res.json(pedido.id);
 		} catch (err) {
             return res.status(400).json({ error: "Falha no registro do pedido " + err });
         }
-
-		return res.json(token);
 	}
 }
