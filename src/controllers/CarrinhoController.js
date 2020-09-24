@@ -42,7 +42,7 @@ module.exports = {
 				where: { usuario_id: usuario.id }
 			});
 
-			// método auxiliar que inserir tech para user
+			// método auxiliar que inserir produto para carrinho
 			await produto.addCarrinho(carrinho, { through: { quantidade: req.body.quantidade } });
 
 			return res.json(carrinho.id);

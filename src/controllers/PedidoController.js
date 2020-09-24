@@ -14,9 +14,7 @@ module.exports = {
 	 * @since 22/09/2020
 	 */
 	async checkout(req, res) {
-		const token = req.headers.token,
-			  dataPedido = {}
-		;
+		const token = req.headers.token;
 
 		if (!token) {
 			return res.status(400).json({ error: "Token inválido" });
@@ -44,22 +42,21 @@ module.exports = {
 			}
 
 			// TODO - Melhorar a forma como o retorno de dados vem. O ideial seria cada linha conter carrinho_produtos com quantidade
-			let carrinho = await Carrinho.findAll({
-				attributes: ['id'],
+			const carrinho = await Carrinho.findAll({
+				attributes: ['id', 'usuario_id'],
 				where: { usuario_id: usuario.id },
 				include: { association: 'produtos'},
+				plain: true
 			});
 
 			if (!carrinho) {
 				return res.status(400).json({ error: "Carrinho não existe ou não possui produtos selecionados" });
 			}
 
-			const carrinho_id = carrinho[0].id;
-
 			//carrinho = await carrinho.getProdutos();
-			carrinho = JSON.parse(JSON.stringify(carrinho[0].produtos));
+			dadosCarrinho = JSON.parse(JSON.stringify(carrinho.produtos));
 
-			const valorTotal = carrinho.reduce( function( prevVal, elem ) {
+			const valorTotal = dadosCarrinho.reduce( function( prevVal, elem ) {
 				return parseFloat(prevVal) + parseFloat(elem.preco);
 			}, 0);
 
@@ -67,29 +64,28 @@ module.exports = {
 				return res.status(400).json({ error: "O valor mínimo para fechar o pedido é de R$ " + config.enums.valorMinimoPedido + "!" });
 			}
 
-			dataPedido.forma_pagamento = req.body.forma_pagamento;
-			dataPedido.endereco_entrega = req.body.endereco_entrega;
-			dataPedido.valor_total = valorTotal;
-			dataPedido.status = config.enums.statusPedido.novo;
-			dataPedido.usuario_id = usuario.id;
+			const pedido = await Pedido.create({
+				forma_pagamento: req.body.forma_pagamento,
+				endereco_entrega: req.body.endereco_entrega,
+				valor_total: valorTotal,
+				status: config.enums.statusPedido.novo,
+				usuario_id: usuario.id
+			});
 
-			const pedido = await Pedido.create(dataPedido);
-
-			carrinho.map(async produto => {
+			dadosCarrinho.forEach(async produto => {
 				try {
-					await pedido.addProdutos(pedido, {
+					await pedido.addProdutos(produto.id, {
 						through: {
-							produto_id: produto.carrinho_produtos.produto_id,
 							quantidade: produto.carrinho_produtos.quantidade,
 							preco: produto.preco
 						}
 					});
-				} catch(err) {
-					return res.status(400).json({ error: "Falha no registro do produto do pedido " + err });
-				}
+				} catch {}
 			});
 
-			return res.json(pedido.id);
+			//await carrinho.removeProdutos(usuario.id);
+
+			return res.json(pedido);
 		} catch (err) {
             return res.status(400).json({ error: "Falha no registro do pedido " + err });
         }

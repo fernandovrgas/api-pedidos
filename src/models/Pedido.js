@@ -6,7 +6,7 @@ class Pedido extends Model {
 			usuario_id: {
                 type: DataTypes.INTEGER,
                 references: {
-                    model: sequelize.models.Pedido,
+                    model: sequelize.models.Usuario,
                     key: 'id'
                 }
 			},
