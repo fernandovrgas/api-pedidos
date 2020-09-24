@@ -1,12 +1,11 @@
 'use strict';
 
-// TODO - Talvez exista uma forma de criar a coluna do banco referenciando o ENUM do config para  FORMA_PAGAMENTO
 module.exports = {
 	up(queryInterface, Sequelize) {
 	  	return Promise.all([
 			queryInterface.addColumn('pedidos',
-		  		'forma_pagamento', {
-					type: Sequelize.INTEGER,
+		  		'endereco_entrega', {
+					type: Sequelize.STRING,
 					allowNull: false,
 		  		}
 			)
