@@ -15,8 +15,11 @@ routes.post('/produtos', authMiddleware, ProdutoController.create);
 routes.put('/produtos/:id', authMiddleware, ProdutoController.update);
 routes.delete('/produtos/:id', authMiddleware, ProdutoController.delete);
 
-routes.post('/carrinho', authMiddleware, CarrinhoController.add);
-routes.post('/pedido', authMiddleware, PedidoController.checkout);
+routes.post('/carrinhos', authMiddleware, CarrinhoController.add);
+
+// Pedidos
+routes.get('/pedidos', authMiddleware, PedidoController.index);
+routes.post('/pedidos', authMiddleware, PedidoController.checkout);
 
 // ======== Rotas pública ====================
 // Usuarios

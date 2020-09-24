@@ -7,6 +7,31 @@ const config = require('../config/config'),
 
 module.exports = {
 	/**
+	 * Recebe o token do usuario. Lista pedido e itens se pedido for do usuário logado.
+	 *
+	 * @author fernando.vargas
+	 * @since 22/09/2020
+	 */
+	async index(req, res) {
+		const token = req.headers.token;
+
+		// TODO - Controle por token - Melhorar a forma como o token é gerido. Desta forma possivelmente não funcionará com dois logins simultaneos
+		const usuario = await Usuario.findAll({ where: { token }, plain: true });
+		if (!usuario) {
+			return res.status(400).json({ error: "Token inválido" });
+		}
+
+		const pedidos = await Pedido.findAll({
+			where: { usuario_id: usuario.id },
+			order: [
+				['createdAt', 'ASC']
+			],
+			include: { association: 'produtos', attributes: ['nome']},
+		});
+		return res.json(pedidos);
+	},
+
+	/**
 	 * Recebe o token do usuario. Busca todos os itens do carrinho e fecha o pedido.
 	 * Depois do pedido fechado os itens do carrinho do usuário serão limpos
 	 *
@@ -15,10 +40,6 @@ module.exports = {
 	 */
 	async checkout(req, res) {
 		const token = req.headers.token;
-
-		if (!token) {
-			return res.status(400).json({ error: "Token inválido" });
-		}
 
 		if (!req.body.endereco_entrega) {
 			return res.status(400).json({ error: "O campo endereco_entrega é obrigatório" });
