@@ -53,11 +53,9 @@ module.exports = {
 				return res.status(400).json({ error: "Carrinho não existe ou não possui produtos selecionados" });
 			}
 
-			//carrinho = await carrinho.getProdutos();
-			dadosCarrinho = JSON.parse(JSON.stringify(carrinho.produtos));
-
-			const valorTotal = dadosCarrinho.reduce( function( prevVal, elem ) {
-				return parseFloat(prevVal) + parseFloat(elem.preco);
+			const valorTotal = carrinho.produtos.reduce( function( prevVal, elem ) {
+				console.log(elem);
+				return parseFloat(prevVal) + (parseFloat(elem.preco) * parseFloat(elem.carrinho_produtos.quantidade));
 			}, 0);
 
 			if (valorTotal < config.enums.valorMinimoPedido) {
@@ -72,7 +70,7 @@ module.exports = {
 				usuario_id: usuario.id
 			});
 
-			dadosCarrinho.forEach(async produto => {
+			carrinho.produtos.forEach(async produto => {
 				try {
 					await pedido.addProdutos(produto.id, {
 						through: {
@@ -80,10 +78,9 @@ module.exports = {
 							preco: produto.preco
 						}
 					});
+					await carrinho.removeProdutos(produto.id);
 				} catch {}
 			});
-
-			//await carrinho.removeProdutos(usuario.id);
 
 			return res.json(pedido);
 		} catch (err) {
