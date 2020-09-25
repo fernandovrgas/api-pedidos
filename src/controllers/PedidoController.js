@@ -22,11 +22,16 @@ module.exports = {
 		}
 
 		const pedidos = await Pedido.findAll({
+			attributes: ['id', 'status', 'valor_total', 'createdAt' ],
 			where: { usuario_id: usuario.id },
-			order: [
-				['createdAt', 'ASC']
-			],
-			include: { association: 'produtos', attributes: ['nome']},
+			order: [['createdAt', 'ASC']],
+			include: {
+				association: 'produtos',
+				attributes: ['nome'],
+				through: {
+					attributes: []
+			 	}
+			},
 		});
 		return res.json(pedidos);
 	},
