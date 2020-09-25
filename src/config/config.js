@@ -8,7 +8,7 @@ module.exports = {
 			'dinheiro': 1,
 			'cartao': 2
 		},
-		limitPaginacaoPedido: 2,
+		limitPaginacaoPedido: 10,
 		status: {
 			'ativo': 'A',
 			'inativo': 'I'

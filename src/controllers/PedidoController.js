@@ -14,7 +14,7 @@ module.exports = {
 	async index(req, res) {
 		const token = req.headers.token,
 			  { page = 1 } = req.query, // parametro da pagina a pesquisar default 1
-			  paginate = config.enums.limitPaginacaoPedido // registros por pagina
+			  paginate = config.enums.limitPaginacaoPedido // registros por pagina,
 		;
 
 		// TODO - Controle por token - Melhorar a forma como o token é gerido. Desta forma possivelmente não funcionará com dois logins simultaneos
@@ -23,10 +23,19 @@ module.exports = {
 			return res.status(400).json({ error: "Token inválido" });
 		}
 
+		let where = { usuario_id: usuario.id };
+		if (req.body.pendentes) {
+			where = { usuario_id: usuario.id, status: [
+				config.enums.statusPedido.novo,
+				config.enums.statusPedido.aceito,
+				config.enums.statusPedido.saiu_para_entrega
+			]};
+		}
+
 		const pedidos = await Pedido.paginate({
 			page, paginate,
 			attributes: ['id', 'status', 'valor_total', 'createdAt' ],
-			where: { usuario_id: usuario.id },
+			where: where,
 			order: [['createdAt', 'ASC']],
 			include: {
 				association: 'produtos',
