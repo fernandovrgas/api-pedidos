@@ -37,7 +37,7 @@ module.exports = {
 		});
 
 		if (!produto) {
-			return res.status(400).json({ error: 'Produto não localizado' });
+			return res.status(400).json({ error: 'Produto não atualizado' });
 		}
 
 		produto = await Produto.findByPk(req.params.id);
