@@ -125,5 +125,38 @@ module.exports = {
 		} catch (err) {
             return res.status(400).json({ error: "Falha no registro do pedido " + err });
         }
-	}
+	},
+
+	/**
+	 * Atualizar status do pedido
+	 *
+	 * @author fernando.vargas
+	 * @since 22/09/2020
+	 */
+	async update(req, res) {
+		if (!req.body.status) {
+			return res.status(400).json({ error: 'Informe o novo Status para o Pedido' });
+		}
+
+		// garantir que quantidade seja um inteiro
+		if (!Number.isInteger(req.body.status)) {
+			return res.status(400).json({ error: "O campo Status precisa ser um número inteiro!" });
+		}
+
+		if ((req.body.status > 5) || (req.body.status <= 0)) {
+			return res.status(400).json({ error: 'Status informado é inválido' });
+		}
+
+		let pedido = await Pedido.update({status: req.body.status}, {
+			where: { id: req.params.id }
+		});
+
+		if (!pedido) {
+			return res.status(400).json({ error: 'Pedido não atualizado' });
+		}
+
+		pedido = await Pedido.findByPk(req.params.id);
+
+		return res.json(pedido);
+	},
 }

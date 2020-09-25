@@ -20,6 +20,8 @@ routes.post('/carrinhos', authMiddleware, CarrinhoController.add);
 // Pedidos
 routes.get('/pedidos', authMiddleware, PedidoController.index);
 routes.post('/pedidos', authMiddleware, PedidoController.checkout);
+routes.put('/pedidos/:id', authMiddleware, PedidoController.update);
+
 
 // ======== Rotas pública ====================
 // Usuarios
