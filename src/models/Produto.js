@@ -1,5 +1,6 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelizePaginate = require('sequelize-paginate');
+const { Model, DataTypes } = require('sequelize'),
+	  sequelizePaginate = require('sequelize-paginate')
+;
 
 class Produto extends Model {
 	static init(sequelize) {

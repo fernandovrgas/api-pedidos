@@ -16,7 +16,7 @@ class Carrinho extends Model {
 	static associate(models) {
 		this.belongsTo(models.Usuario, { foreignKey: 'usuario_id', as: 'usuarios' });
 
-		let CarrinhoProduto = this.sequelize.define('carrinho_produtos', {
+		this.sequelize.define('carrinho_produtos', {
 			quantidade: DataTypes.INTEGER
 		});
 

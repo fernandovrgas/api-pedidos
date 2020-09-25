@@ -1,5 +1,6 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelizePaginate = require('sequelize-paginate');
+const { Model, DataTypes } = require('sequelize'),
+	  sequelizePaginate = require('sequelize-paginate')
+;
 
 class Pedido extends Model {
 	static init(sequelize) {
@@ -21,7 +22,7 @@ class Pedido extends Model {
 	static associate(models) {
 		this.belongsTo(models.Usuario, { foreignKey: 'usuario_id', as: 'usuarios' });
 
-		let PedidoProduto = this.sequelize.define('pedido_produtos', {
+		this.sequelize.define('pedido_produtos', {
 			quantidade: DataTypes.INTEGER,
 			preco: DataTypes.DECIMAL(10,2)
 		});
