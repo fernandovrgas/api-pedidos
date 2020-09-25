@@ -9,6 +9,7 @@ module.exports = {
 			'cartao': 2
 		},
 		limitPaginacaoPedido: 10,
+		limitPaginacaoProduto: 10,
 		status: {
 			'ativo': 'A',
 			'inativo': 'I'

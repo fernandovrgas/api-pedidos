@@ -5,7 +5,16 @@ const Produto = require('../models/Produto'),
 module.exports = {
 	// lista
 	async index(req, res) {
-		const produtos = await Produto.findAll({ where: { status: config.enums.status.ativo } });
+		const { page = 1 } = req.query, // parametro da pagina a pesquisar default 1
+			  paginate = config.enums.limitPaginacaoProduto // registros por pagina,
+		;
+
+		const produtos = await Produto.paginate({
+			page, paginate,
+			exclude: ['id', 'status', 'valor_total', 'createdAt' ],
+			where: { status: config.enums.status.ativo }
+		});
+
 		return res.json(produtos);
 	},
 
