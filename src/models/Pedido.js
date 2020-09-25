@@ -1,4 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
+const sequelizePaginate = require('sequelize-paginate');
 
 class Pedido extends Model {
 	static init(sequelize) {
@@ -28,5 +29,7 @@ class Pedido extends Model {
 		this.belongsToMany(models.Produto, { foreignKey: 'pedido_id', through: 'pedido_produtos', as: 'produtos' });
 	}
 }
+
+sequelizePaginate.paginate(Pedido);
 
 module.exports = Pedido;

@@ -1,7 +1,6 @@
 const config = require('../config/config'),
 	  Carrinho = require('../models/Carrinho'),
 	  Pedido = require('../models/Pedido'),
-	  Produto = require('../models/Produto'),
 	  Usuario = require('../models/Usuario')
 ;
 
@@ -13,7 +12,10 @@ module.exports = {
 	 * @since 22/09/2020
 	 */
 	async index(req, res) {
-		const token = req.headers.token;
+		const token = req.headers.token,
+			  { page = 1 } = req.query, // parametro da pagina a pesquisar default 1
+			  paginate = config.enums.limitPaginacaoPedido // registros por pagina
+		;
 
 		// TODO - Controle por token - Melhorar a forma como o token é gerido. Desta forma possivelmente não funcionará com dois logins simultaneos
 		const usuario = await Usuario.findAll({ where: { token }, plain: true });
@@ -21,7 +23,8 @@ module.exports = {
 			return res.status(400).json({ error: "Token inválido" });
 		}
 
-		const pedidos = await Pedido.findAll({
+		const pedidos = await Pedido.paginate({
+			page, paginate,
 			attributes: ['id', 'status', 'valor_total', 'createdAt' ],
 			where: { usuario_id: usuario.id },
 			order: [['createdAt', 'ASC']],
@@ -31,8 +34,9 @@ module.exports = {
 				through: {
 					attributes: []
 			 	}
-			},
+			}
 		});
+
 		return res.json(pedidos);
 	},
 

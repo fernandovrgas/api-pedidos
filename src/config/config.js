@@ -4,11 +4,15 @@ module.exports = {
 	},
 
 	enums: {
+		formaPagamento: {
+			'dinheiro': 1,
+			'cartao': 2
+		},
+		limitPaginacaoPedido: 2,
 		status: {
 			'ativo': 'A',
 			'inativo': 'I'
 		},
-		valorMinimoPedido: 10,
 		statusPedido: {
 			'novo': 1,
 			'aceito': 2,
@@ -16,9 +20,6 @@ module.exports = {
 			'entregue': 4,
 			'cancelado': 5
 		},
-		formaPagamento: {
-			'dinheiro': 1,
-			'cartao': 2
-		}
+		valorMinimoPedido: 10,
 	}
 }
