@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const Produto = require('../models/Produto'),
 	  config = require('../config/config')
 ;
@@ -9,10 +10,18 @@ module.exports = {
 			  paginate = config.enums.limitPaginacaoProduto // registros por pagina,
 		;
 
+		let where = { status: config.enums.status.ativo };
+		if (req.body.nome) {
+			where = {
+				status: config.enums.status.ativo,
+				nome: { [Op.like]: '%' + req.body.nome  + '%' }
+			};
+		}
+
 		const produtos = await Produto.paginate({
 			page, paginate,
 			exclude: ['id', 'status', 'valor_total', 'createdAt' ],
-			where: { status: config.enums.status.ativo }
+			where: where
 		});
 
 		return res.json(produtos);
